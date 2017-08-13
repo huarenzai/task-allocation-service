@@ -2,15 +2,49 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
 ">
     <context:annotation-config />
+    <!--注入 pageController-->
+    <aop:aspectj-autoproxy />
     <context:property-placeholder location="classpath*:jdbc.properties"></context:property-placeholder>
+    <!--加载队列sdk-->
+    <bean id="proConfig" class="com.gic.task.allocation.common.init.CustomizedPropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:task.properties</value>
+            </list>
+        </property>
+    </bean>
+    <!--加载dubbo-->
+    <!--<import resource="dubbo-setting.xml" />-->
+
     <bean class="com.alibaba.druid.pool.DruidDataSource" id="dataSource">
         <property name="url" value="${jdbc.url}"></property>
         <property name="username" value="${jdbc.username}"></property>
         <property name="password" value="${jdbc.password}"></property>
+        <!-- 配置初始化大小、最小、最大 -->
+        <property name="initialSize" value="30" />
+        <property name="minIdle" value="1" />
+        <property name="maxActive" value="30" />
+
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name="maxWait" value="0" />
+
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="60000" />
+
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="300000" />
+
+        <property name="validationQuery" value="SELECT 'x'" />
+        <property name="testWhileIdle" value="true" />
+        <property name="testOnBorrow" value="false" />
+        <property name="testOnReturn" value="false" />
     </bean>
     <bean class="org.springframework.jdbc.core.JdbcTemplate" id="jdbcTemplate">
         <property name="dataSource" ref="dataSource"></property>
@@ -20,4 +54,13 @@
         <property name="sqlFactory" ref="sqlFactory" />
     </bean>
     <bean id="sqlFactory" class="com.dexcoder.dal.SimpleSqlFactory"></bean>
+    <!--需要分页时声明-->
+    <bean id="pageControl" class="com.dexcoder.dal.spring.page.PageControl"></bean>
+
+    <bean id="poolTaskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <property name="corePoolSize" value="10"></property>
+        <property name="maxPoolSize" value="20"></property>
+        <property name="keepAliveSeconds" value="300"></property>
+    </bean>
+
 </beans>
