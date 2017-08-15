@@ -2,17 +2,21 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
        http://code.alibabatech.com/schema/dubbo
        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 
+    <context:component-scan base-package="com.*"/>
+    <dubbo:annotation package="com"/>
     <dubbo:application name="task-allocation" />
-    <dubbo:protocol  name="dubbo"></dubbo:protocol>
+    <dubbo:protocol  name="dubbo" port="21902"></dubbo:protocol>
 
     <dubbo:monitor protocol="registry" />
-    <!--<dubbo:registry address="zookeeper://123.207.187.158:2199" protocol="dubbo" id="remoteAddress" timeout="20000" file="dubbo/remote/task-allcation/dubbo.cache"/>-->
-    <dubbo:registry address="zookeeper://localhost:2181" protocol="dubbo" id="remoteAddress" timeout="10000" file="dubbo/local/task-setting/dubbo.cache"/>
+    <dubbo:registry address="zookeeper://123.207.187.158:2199" protocol="dubbo" id="remoteAddress" timeout="20000" file="dubbo/remote/task-allcation/dubbo.cache"/>
+    <!--<dubbo:registry address="zookeeper://localhost:2181" protocol="dubbo" id="remoteAddress" timeout="10000" file="dubbo/local/task-setting/dubbo.cache"/>-->
     <dubbo:provider timeout="10000" retries="0" registry="remoteAddress" />
     <dubbo:consumer timeout="10000" retries="0" check="false" registry="remoteAddress"/>
 
@@ -20,5 +24,5 @@
     <dubbo:service interface="com.gic.task.allocation.service.TaskAllocationSdkService" ref="taskAllocationSdkService" retries="0" ></dubbo:service>
 
     <!--测试-->
-    <dubbo:reference interface="com.test.service.TestTaskService"  id="testTaskService" check="false"></dubbo:reference>
+    <!--<dubbo:reference interface="com.test.service.TestTaskService"  id="testTaskService" check="false"></dubbo:reference>-->
 </beans>

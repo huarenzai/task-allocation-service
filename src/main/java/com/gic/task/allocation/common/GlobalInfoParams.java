@@ -9,12 +9,12 @@ import java.util.Map;
 public class GlobalInfoParams {
     public static Map<String, String> ctxPropertiesMap;// 上下文属性Map
 
-    public static  int TASK_STATUS_INIT=0;//初始化
-    public static  int TASK_STATUS_ALLOCATING=1;//等待分配处理
+    public static  int TASK_STATUS_INIT=1;//初始化
+//    public static  int TASK_STATUS_ALLOCATING=1;//等待分配处理
     public static  int TASK_STATUS_ALLOCATION_DEAL=2;//队列发送 等待分配处理结果
     public static  int TASK_STATUS_DEAL=3;//分配完成 等处理
-    public static  int TASK_STATUS_FAIL=4;//取消
-    public static  int TASK_STATUS_SUCCESS=5;//成功
+    public static  int TASK_STATUS_SUCCESS=4;//成功
+    public static  int TASK_STATUS_FAIL=5;//取消
     public static  int TASK_STATUS_EXCEPTION=6;//异常
 
     public static int CALLNACK_TYPE_INIT=0;//等待分配处理

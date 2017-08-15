@@ -8,10 +8,14 @@
         http://www.springframework.org/schema/aop
         http://www.springframework.org/schema/aop/spring-aop.xsd
 ">
+
     <context:annotation-config />
     <!--注入 pageController-->
     <aop:aspectj-autoproxy />
     <context:property-placeholder location="classpath*:jdbc.properties"></context:property-placeholder>
+
+    <import resource="dubbo-setting.xml" />
+
     <!--加载队列sdk-->
     <bean id="proConfig" class="com.gic.task.allocation.common.init.CustomizedPropertyPlaceholderConfigurer">
         <property name="locations">

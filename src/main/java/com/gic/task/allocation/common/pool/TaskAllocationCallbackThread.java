@@ -36,7 +36,7 @@ public class TaskAllocationCallbackThread implements Runnable {
         if (status==GlobalInfoParams.TASK_STATUS_FAIL||status==GlobalInfoParams.TASK_STATUS_EXCEPTION) {
             logger.info(taskCallbackQo.getTaskAllocationId()+"任务已经结束！---"+status);
         }
-        if (taskCallbackQo.getCallbackType()== GlobalInfoParams.TASK_STATUS_INIT) {//初始化
+        if (taskCallbackQo.getCallbackType()== GlobalInfoParams.CALLNACK_TYPE_INIT) {//初始化
             if (taskCallbackQo.getIsSuccess()==0) {//初始化全部异常
                 taskAllocationService.changeStatus(taskCallbackQo.getTaskAllocationId(),GlobalInfoParams.TASK_STATUS_EXCEPTION);//异常状态
             }else{//改变

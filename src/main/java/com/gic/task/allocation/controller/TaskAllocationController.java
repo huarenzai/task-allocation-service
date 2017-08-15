@@ -30,6 +30,7 @@ public class TaskAllocationController {
     public String queryTask(ApiQueryListQo apiQueryListQo, ModelMap modelMap) {
         List<TaskAllocationEntity> taskAllocationEntities = taskAllocationService.queryListByPage(apiQueryListQo);
         System.out.println(taskAllocationEntities);
+        modelMap.addAttribute("list",taskAllocationEntities);
         return "";
     }
 }

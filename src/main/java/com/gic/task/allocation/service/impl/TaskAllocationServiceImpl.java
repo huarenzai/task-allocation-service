@@ -44,7 +44,7 @@ public class TaskAllocationServiceImpl extends BaseServiceImpl<TaskAllocationEnt
             //设置缓存
             TaskAllocationMemcache.setParams(taskAllocationEntity.getTaskAllocationId(), params);
             //设置状态 正在等待分配中
-            TaskAllocationMemcache.setStatus(taskAllocationEntity.getTaskAllocationId(), GlobalInfoParams.TASK_STATUS_ALLOCATING);
+            TaskAllocationMemcache.setStatus(taskAllocationEntity.getTaskAllocationId(), GlobalInfoParams.TASK_STATUS_INIT);
         }
         return insert>0;
     }
@@ -69,6 +69,12 @@ public class TaskAllocationServiceImpl extends BaseServiceImpl<TaskAllocationEnt
         if (b) {
             //设置状态
             TaskAllocationMemcache.setStatus(taskAllocationEntity.getTaskAllocationId(),taskAllocationEntity.getTaskStatus());
+            //
+            TaskAllocationEntity allocationEntity = findSingleByTaskAllocationId(taskAllocationEntity.getTaskAllocationId());
+            if (allocationEntity.getTaskExecNum()==allocationEntity.getTaskTotal()&&
+                    (allocationEntity.getTaskStatus()!=GlobalInfoParams.TASK_STATUS_FAIL&&allocationEntity.getTaskStatus()!=GlobalInfoParams.TASK_STATUS_EXCEPTION)) {//成功
+                changeStatus(taskAllocationEntity.getTaskAllocationId(),GlobalInfoParams.TASK_STATUS_SUCCESS);
+            }
         }
         return b;
     }
@@ -80,7 +86,7 @@ public class TaskAllocationServiceImpl extends BaseServiceImpl<TaskAllocationEnt
             logger.info(taskAllocationEntity.getTaskAllocationId()+"----updateDeal+任务保存异常!");
         }
         TaskAllocationEntity allocationEntity = findSingleByTaskAllocationId(taskAllocationEntity.getTaskAllocationId());
-        if (allocationEntity.getTaskExecNum()>=allocationEntity.getTaskTotal()&&
+        if (allocationEntity.getTaskExecNum()==allocationEntity.getTaskTotal()&&
                 (allocationEntity.getTaskStatus()!=GlobalInfoParams.TASK_STATUS_FAIL&&allocationEntity.getTaskStatus()!=GlobalInfoParams.TASK_STATUS_EXCEPTION)) {//成功
             changeStatus(taskAllocationEntity.getTaskAllocationId(),GlobalInfoParams.TASK_STATUS_SUCCESS);
         }

@@ -40,10 +40,10 @@ public class TaskAllocationThread implements Runnable {
                 allocationTaskQo.setParams(params);
                 allocationTaskQo.setTaskAllocationId(single.getTaskAllocationId());
                 //发送队列
-//                GICMQClientUtil.getClientInstance().sendMessage(single.getTaskMqKey(), JSONObject.toJSONString(allocationTaskQo));
+                GICMQClientUtil.getClientInstance().sendMessage(single.getTaskMqKey(), JSONObject.toJSONString(allocationTaskQo));
                 //测试
-                TestTaskService testTaskService = (TestTaskService) BeanFactoryUtil.getBean("testTaskService");
-                testTaskService.run(JSONObject.toJSONString(allocationTaskQo));
+//                TestTaskService testTaskService = (TestTaskService) BeanFactoryUtil.getBean("testTaskService");
+//                testTaskService.run(JSONObject.toJSONString(allocationTaskQo));
                 //end
 
                 //更新状态

@@ -12,9 +12,37 @@
 ">
     <context:component-scan base-package="com.gic.task.allocation" />
     <mvc:annotation-driven  />
-    <import resource="dubbo-setting.xml" />
 
-    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+    <bean
+            class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+        <property name="order" value="1" />
+        <!-- 扩展名至mimeType的映射,即 http://xxxx/rest.json 映射为 application/json http://xxxx/rest.xml
+            映射为 application/xml -->
+        <property name="mediaTypes">
+            <map>
+                <entry key="json" value="application/json" />
+                <entry key="xml" value="application/xml" />
+            </map>
+        </property>
+        <!-- 用于开启 http://xxxx/rest?format=json 的支持 -->
+        <property name="favorParameter" value="true" />
+        <property name="defaultViews">
+            <list>
+                <!-- JSON View -->
+                <bean
+                        class="org.springframework.web.servlet.view.json.MappingJacksonJsonView">
+                </bean>
+            </list>
+        </property>
+        <!-- 设置为true以忽略对Accept Header的支持 -->
+        <property name="ignoreAcceptHeader" value="true" />
+    </bean>
+
+    <!-- 视图解析器配置 -->
+    <bean class="org.springframework.web.servlet.view.BeanNameViewResolver" />
+    <!-- If no extension matched, use JSP view -->
+    <bean
+            class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="order" value="2" />
         <property name="prefix">
             <value>/WEB-INF/view/</value>

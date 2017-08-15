@@ -7,6 +7,7 @@ import com.gic.task.allocation.common.GlobalInfoParams;
 import com.gic.task.allocation.dao.TaskAllocationDao;
 import com.gic.task.allocation.entity.TaskAllocationEntity;
 import com.gic.task.allocation.qo.ApiQueryListQo;
+import com.gic.task.allocation.util.CommonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
@@ -22,7 +23,15 @@ import java.util.List;
 public class TaskAllocationDaoImpl extends BaseDaoImpl<TaskAllocationEntity> implements TaskAllocationDao {
     private Logger logger=Logger.getLogger(this.getClass());
     public TaskAllocationEntity fingSingle() {
-        Criteria criteria = Criteria.select(TaskAllocationEntity.class).where("taskStatus", new Object[]{GlobalInfoParams.TASK_STATUS_INIT}).desc("dealTime");
+        String uuidRandom = CommonUtil.getUUIDRandom();
+        String sql="update gic_task_allocation set own_sign=? where task_status=? and own_sign IS NULL order by deal_time desc limit 1";
+        int i = jdbcDao.updateForSql(sql,new Object[]{uuidRandom,GlobalInfoParams.TASK_STATUS_INIT});
+        Criteria criteria=Criteria.select(TaskAllocationEntity.class);
+        if (i>0) {
+            criteria.where("own_sign",new String[]{uuidRandom});
+        }else{
+            return null;
+        }
         return jdbcDao.querySingleResult(criteria);//获取单挑数据
     }
 
