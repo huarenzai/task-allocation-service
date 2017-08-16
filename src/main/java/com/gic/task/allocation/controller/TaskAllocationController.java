@@ -4,10 +4,14 @@ import com.dexcoder.commons.bean.BeanConverter;
 import com.gic.task.allocation.common.GlobalInfoParams;
 import com.gic.task.allocation.common.TaskAllocationMemcache;
 import com.gic.task.allocation.entity.TaskAllocationEntity;
+import com.gic.task.allocation.entity.TaskFlowEntity;
+import com.gic.task.allocation.qo.ApiQueryDetailListQo;
 import com.gic.task.allocation.qo.ApiQueryListQo;
 import com.gic.task.allocation.service.TaskAllocationService;
+import com.gic.task.allocation.service.TaskFlowService;
 import com.gic.task.allocation.util.MemCachedUtil;
 import com.gic.task.allocation.vo.TaskAllocationVo;
+import com.gic.task.allocation.vo.TaskFlowVo;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +29,9 @@ import java.util.List;
 public class TaskAllocationController {
     @Autowired
     private TaskAllocationService taskAllocationService;
+
+    @Autowired
+    private TaskFlowService taskFlowService;
     /**
      * 取消队列
      */
@@ -90,6 +97,19 @@ public class TaskAllocationController {
     public String processStatus(ModelMap modelMap){
         int stopFlag = TaskAllocationMemcache.getStopFlag();
         modelMap.addAttribute("status",stopFlag);
+        return "json";
+    }
+
+    @RequestMapping("/queryTaskDetail")
+    public String queryTaskDetail(ApiQueryDetailListQo apiQueryDetailListQo,ModelMap modelMap) {
+        List<TaskFlowEntity> list = taskFlowService.queryListByPage(apiQueryDetailListQo);
+        List<TaskFlowVo> ret=new ArrayList<TaskFlowVo>();
+        for (TaskFlowEntity taskFlowEntity:list) {
+            TaskFlowVo taskFlowVo = BeanConverter.convert(new TaskFlowVo(), taskFlowEntity,new String[]{"createTime"});
+            taskFlowVo.setCreateTime(DateFormatUtils.format(taskFlowEntity.getCreateTime(),"yyyy-MM-dd HH:mm:ss"));
+            ret.add(taskFlowVo);
+        }
+        modelMap.addAttribute("list",ret);
         return "json";
     }
 }
