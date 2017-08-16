@@ -7,15 +7,20 @@ import com.gic.task.allocation.common.TaskAllocationMemcache;
 import com.gic.task.allocation.common.pool.TaskAllocationThread;
 import com.gic.task.allocation.dao.TaskAllocationDao;
 import com.gic.task.allocation.entity.TaskAllocationEntity;
+import com.gic.task.allocation.entity.TaskFlowEntity;
 import com.gic.task.allocation.qo.ApiQueryListQo;
 import com.gic.task.allocation.qo.InitTaskQo;
+import com.gic.task.allocation.qo.TaskCallbackQo;
 import com.gic.task.allocation.service.TaskAllocationService;
+import com.gic.task.allocation.service.TaskFlowService;
+import com.gic.task.allocation.util.CommonUtil;
 import com.gic.task.allocation.util.MemCachedUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,6 +34,10 @@ public class TaskAllocationServiceImpl extends BaseServiceImpl<TaskAllocationEnt
 
     @Autowired
     private TaskAllocationDao taskAllocationDao;
+
+    @Autowired
+    private TaskFlowService taskFlowService;
+
 
 //    public void initTask(InitTaskQo initTaskQo) {
 //        TaskAllocationEntity taskAllocationEntity = BeanConverter.convert(new TaskAllocationEntity(), initTaskQo);
@@ -56,7 +65,17 @@ public class TaskAllocationServiceImpl extends BaseServiceImpl<TaskAllocationEnt
 
     public boolean changeStatus(String taskAllocationId,int status) {
         logger.info(taskAllocationId+"---改变状态w为："+status);
-        boolean b = taskAllocationDao.changeStatus(taskAllocationId, status);
+        boolean b = taskAllocationDao.changeStatus(taskAllocationId, status,"");
+        if (b) {
+            //设置状态
+            TaskAllocationMemcache.setStatus(taskAllocationId,status);
+        }
+        return b;
+    }
+
+    public boolean changeStatus(String taskAllocationId, int status, String reason) {
+        logger.info(taskAllocationId+"---改变状态w为："+status);
+        boolean b = taskAllocationDao.changeStatus(taskAllocationId, status,reason);
         if (b) {
             //设置状态
             TaskAllocationMemcache.setStatus(taskAllocationId,status);
@@ -80,12 +99,23 @@ public class TaskAllocationServiceImpl extends BaseServiceImpl<TaskAllocationEnt
         return b;
     }
 
-    public boolean updateDeal(TaskAllocationEntity taskAllocationEntity) {
+    public boolean updateDeal(TaskAllocationEntity taskAllocationEntity, TaskCallbackQo taskCallbackQo) {
         logger.info(taskAllocationEntity.getTaskAllocationId()+"-----更新处理的数据---"+taskAllocationEntity.getTaskExecNum());
         boolean b = taskAllocationDao.updateDeal(taskAllocationEntity);
         if (!b) {
             logger.info(taskAllocationEntity.getTaskAllocationId()+"----updateDeal+任务保存异常!");
         }
+        TaskFlowEntity taskFlowEntity=new TaskFlowEntity();
+        taskFlowEntity.setTaskFlowId(CommonUtil.getUUIDRandom());
+        taskFlowEntity.setCreateTime(new Date());
+        taskFlowEntity.setStatus(taskCallbackQo.getIsSuccess());
+        taskFlowEntity.setReason(taskCallbackQo.getReason());
+        taskFlowEntity.setTaskAllocationId(taskCallbackQo.getTaskAllocationId());
+        Long insert = taskFlowService.insert(taskFlowEntity);
+        if (insert<=0) {
+            logger.info("错误:taskAllocationId:"+taskCallbackQo.getTaskAllocationId());
+        }
+
         TaskAllocationEntity allocationEntity = findSingleByTaskAllocationId(taskAllocationEntity.getTaskAllocationId());
         if (allocationEntity.getTaskExecNum()==allocationEntity.getTaskTotal()&&
                 (allocationEntity.getTaskStatus()!=GlobalInfoParams.TASK_STATUS_FAIL&&allocationEntity.getTaskStatus()!=GlobalInfoParams.TASK_STATUS_EXCEPTION)) {//成功

@@ -6,14 +6,8 @@ import com.gic.task.allocation.common.TaskAllocationMemcache;
 import com.gic.task.allocation.entity.TaskAllocationEntity;
 import com.gic.task.allocation.qo.AllocationTaskQo;
 import com.gic.task.allocation.service.TaskAllocationService;
-import com.gic.task.allocation.util.BeanFactoryUtil;
 import com.gic.task.allocation.util.GICMQClientUtil;
-import com.gic.task.allocation.util.MemCachedUtil;
-import com.test.service.TestTaskService;
 import org.apache.log4j.Logger;
-import org.apache.log4j.spi.LoggerFactory;
-import org.springframework.context.ApplicationContextInitializer;
-import org.springframework.web.context.ContextLoader;
 
 /**
  * 任务分配线程
@@ -57,7 +51,7 @@ public class TaskAllocationThread implements Runnable {
                 e.printStackTrace();
                 logger.info(single.getTaskAllocationId()+"分配失败!"+single.getTaskSignKey());
                 //发送异常
-                taskAllocationService.changeStatus(single.getTaskAllocationId(),GlobalInfoParams.TASK_STATUS_EXCEPTION);
+                taskAllocationService.changeStatus(single.getTaskAllocationId(),GlobalInfoParams.TASK_STATUS_EXCEPTION,e.getMessage());
             }
         }
     }

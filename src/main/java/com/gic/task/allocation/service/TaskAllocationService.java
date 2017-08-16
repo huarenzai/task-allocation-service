@@ -3,6 +3,7 @@ package com.gic.task.allocation.service;
 import com.gic.task.allocation.entity.TaskAllocationEntity;
 import com.gic.task.allocation.qo.ApiQueryListQo;
 import com.gic.task.allocation.qo.InitTaskQo;
+import com.gic.task.allocation.qo.TaskCallbackQo;
 
 import java.util.List;
 
@@ -30,6 +31,13 @@ public interface TaskAllocationService extends BaseService<TaskAllocationEntity>
     public boolean changeStatus(String taskAllocationId,int status);
 
     /**
+     * 改变状态
+     * @param status
+     * @return
+     */
+    public boolean changeStatus(String taskAllocationId,int status,String reason);
+
+    /**
      * 更新初始化数据
      * @param taskAllocationEntity
      * @return
@@ -41,7 +49,7 @@ public interface TaskAllocationService extends BaseService<TaskAllocationEntity>
      * @param taskAllocationEntity
      * @return
      */
-    public boolean updateDeal(TaskAllocationEntity taskAllocationEntity);
+    public boolean updateDeal(TaskAllocationEntity taskAllocationEntity, TaskCallbackQo taskCallbackQo);
 
     /**
      * 查询

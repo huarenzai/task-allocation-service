@@ -118,11 +118,6 @@
       <version>3.0.2</version>
     </dependency>
     <dependency>
-      <groupId>com.gic</groupId>
-      <artifactId>task-allocation-sdk</artifactId>
-      <version>LATEST</version>
-    </dependency>
-    <dependency>
       <groupId>org.codehaus.jackson</groupId>
       <artifactId>jackson-mapper-asl</artifactId>
       <version>1.9.13</version>

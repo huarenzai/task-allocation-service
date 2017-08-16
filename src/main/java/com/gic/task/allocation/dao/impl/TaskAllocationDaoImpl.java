@@ -35,9 +35,10 @@ public class TaskAllocationDaoImpl extends BaseDaoImpl<TaskAllocationEntity> imp
         return jdbcDao.querySingleResult(criteria);//获取单挑数据
     }
 
-    public boolean changeStatus(String taskAllocationId,int status) {
+    public boolean changeStatus(String taskAllocationId,int status,String reason) {
         Criteria criteria = Criteria.update(TaskAllocationEntity.class).set("taskStatus", status).
-                set("dealTime",new Date()).where("taskAllocationId", new Object[]{taskAllocationId});
+                set("dealTime",new Date()).set("reason",reason)
+                .where("taskAllocationId", new Object[]{taskAllocationId});
 //        getJdbcDao();
         int i = jdbcDao.update(criteria);
         return i>=0;

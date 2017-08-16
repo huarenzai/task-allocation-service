@@ -66,5 +66,6 @@
         <property name="maxPoolSize" value="500"></property>
         <property name="keepAliveSeconds" value="300"></property>
     </bean>
+    <bean class="com.gic.task.allocation.util.BeanFactoryUtil" id="beanFactoryUtil"></bean>
 
 </beans>

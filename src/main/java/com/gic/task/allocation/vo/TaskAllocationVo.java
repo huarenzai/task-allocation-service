@@ -1,18 +1,12 @@
-package com.gic.task.allocation.entity;
-
-import com.dexcoder.commons.pager.Pageable;
-import com.dexcoder.dal.annotation.Table;
+package com.gic.task.allocation.vo;
 
 import java.io.Serializable;
 import java.util.Date;
 
 /**
- *任务调度实体
- * Created by Administrator on 2017/8/11.
+ * Created by Administrator on 2017/8/16.
  */
-@Table(name = "gic_task_allocation",pkColumn = "id")
-public class TaskAllocationEntity implements Serializable {
-    private int id;//自增
+public class TaskAllocationVo implements Serializable {
     private String taskAllocationId;
     private int taskType;//任务类型
     private String operationUserId;//任务执行人id
@@ -23,10 +17,12 @@ public class TaskAllocationEntity implements Serializable {
     private int taskTotal;//任务总数
     private String taskSignKey;//任务标识
     private int taskStatus;//任务状态  任务状态：0-初始化，1-等待分配中，2-分配处理中，3-任务处理中，4-任务完成，5-任务取消，6，任务异常
-    private Date createTime;//创建时间
-    private Date dealTime;//处理时间
-    private int taskRank;//任务优先级
+    private String createTime;//创建时间
+    private String dealTime;//处理时间
+    private String speed;//执行速度
     private String reason;
+//    private int taskRank;//任务优先级
+
 
     public String getReason() {
         return reason;
@@ -34,14 +30,6 @@ public class TaskAllocationEntity implements Serializable {
 
     public void setReason(String reason) {
         this.reason = reason;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getTaskAllocationId() {
@@ -124,27 +112,27 @@ public class TaskAllocationEntity implements Serializable {
         this.taskStatus = taskStatus;
     }
 
-    public Date getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 
-    public Date getDealTime() {
+    public String getDealTime() {
         return dealTime;
     }
 
-    public void setDealTime(Date dealTime) {
+    public void setDealTime(String dealTime) {
         this.dealTime = dealTime;
     }
 
-    public int getTaskRank() {
-        return taskRank;
+    public String getSpeed() {
+        return speed;
     }
 
-    public void setTaskRank(int taskRank) {
-        this.taskRank = taskRank;
+    public void setSpeed(String speed) {
+        this.speed = speed;
     }
 }

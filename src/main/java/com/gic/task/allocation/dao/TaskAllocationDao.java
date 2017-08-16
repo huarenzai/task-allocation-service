@@ -20,7 +20,7 @@ public interface TaskAllocationDao extends BaseDao<TaskAllocationEntity> {
      * @param status
      * @return
      */
-    public boolean changeStatus(String taskAllocationId,int status);
+    public boolean changeStatus(String taskAllocationId,int status,String reason);
 
     /**
      * 更新初始化总数

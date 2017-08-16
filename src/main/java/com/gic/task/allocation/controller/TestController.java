@@ -1,25 +1,15 @@
 package com.gic.task.allocation.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.dexcoder.dal.JdbcDao;
-import com.gic.mq.sdk.GicMQClient;
-import com.gic.mq.sdk.MQConfig;
 import com.gic.task.allocation.common.TaskAllocationMemcache;
-import com.gic.task.allocation.entity.TaskAllocationEntity;
-import com.gic.task.allocation.entity.TestEntity;
 import com.gic.task.allocation.qo.InitTaskQo;
 import com.gic.task.allocation.service.TaskAllocationSdkService;
 import com.gic.task.allocation.service.TaskAllocationService;
-import com.gic.task.allocation.util.CommonUtil;
-import com.gic.task.allocation.util.GICMQClientUtil;
-import com.gic.task.allocation.util.MemCachedUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.UUID;
 
 /**
  * Created by Administrator on 2017/8/10.

@@ -51,5 +51,4 @@
             <value>.jsp</value>
         </property>
     </bean>
-    <bean class="com.gic.task.allocation.util.BeanFactoryUtil" id="beanFactoryUtil"></bean>
 </beans>

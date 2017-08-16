@@ -5,6 +5,7 @@ import com.gic.task.allocation.common.TaskAllocationMemcache;
 import com.gic.task.allocation.entity.TaskAllocationEntity;
 import com.gic.task.allocation.qo.TaskCallbackQo;
 import com.gic.task.allocation.service.TaskAllocationService;
+import com.gic.task.allocation.service.TaskFlowService;
 import org.apache.log4j.Logger;
 
 /**
@@ -38,7 +39,7 @@ public class TaskAllocationCallbackThread implements Runnable {
         }
         if (taskCallbackQo.getCallbackType()== GlobalInfoParams.CALLNACK_TYPE_INIT) {//初始化
             if (taskCallbackQo.getIsSuccess()==0) {//初始化全部异常
-                taskAllocationService.changeStatus(taskCallbackQo.getTaskAllocationId(),GlobalInfoParams.TASK_STATUS_EXCEPTION);//异常状态
+                taskAllocationService.changeStatus(taskCallbackQo.getTaskAllocationId(),GlobalInfoParams.TASK_STATUS_EXCEPTION,taskCallbackQo.getReason());//异常状态
             }else{//改变
                 TaskAllocationEntity taskAllocationEntity = new TaskAllocationEntity();
                 if (status==GlobalInfoParams.TASK_STATUS_FAIL||status==GlobalInfoParams.TASK_STATUS_EXCEPTION) {//失败或者异常时候
@@ -48,14 +49,14 @@ public class TaskAllocationCallbackThread implements Runnable {
                 }
                 taskAllocationEntity.setTaskAllocationId(taskCallbackQo.getTaskAllocationId());
                 taskAllocationEntity.setTaskTotal(taskCallbackQo.getTaskTotal());
-                boolean b = taskAllocationService.updateInitTotal(taskAllocationEntity);//任务异常
+                boolean b = taskAllocationService.updateInitTotal(taskAllocationEntity);//
             }
         }else if (taskCallbackQo.getCallbackType()==GlobalInfoParams.CALLBACK_TYPE_DEAL) {//处理数据
             TaskAllocationEntity taskAllocationEntity=new TaskAllocationEntity();
             taskAllocationEntity.setTaskExecNum(taskCallbackQo.getTaskTotal());
             taskAllocationEntity.setTaskFailNum(taskCallbackQo.getTaskFailNum());
             taskAllocationEntity.setTaskAllocationId(taskCallbackQo.getTaskAllocationId());
-            boolean b = taskAllocationService.updateDeal(taskAllocationEntity);
+            boolean b = taskAllocationService.updateDeal(taskAllocationEntity,taskCallbackQo);
 //            taskAllocationService.initTask();
 //            taskAllocationService.
         }
