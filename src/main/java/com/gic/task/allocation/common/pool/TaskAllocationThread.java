@@ -55,7 +55,7 @@ public class TaskAllocationThread implements Runnable {
                 taskAllocationService.changeStatus(single.getTaskAllocationId(), GlobalInfoParams.TASK_STATUS_ALLOCATION_DEAL);
             } catch (Exception e) {
                 e.printStackTrace();
-                logger.info(single.getTaskAllocationId()+"分配失败!");
+                logger.info(single.getTaskAllocationId()+"分配失败!"+single.getTaskSignKey());
                 //发送异常
                 taskAllocationService.changeStatus(single.getTaskAllocationId(),GlobalInfoParams.TASK_STATUS_EXCEPTION);
             }
