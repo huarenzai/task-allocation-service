@@ -32,5 +32,21 @@ public class TaskAllocationMemcache {
         return (Integer) MemCachedUtil.getValue(taskAllocationId);
     }
 
+    /**
+     * 设置
+     * @param status
+     */
+    public static  void  setStopFlag(int status){
+        String key=GlobalInfoParams.PROCESS_IS_STOP_FLAG;
+        MemCachedUtil.setValue(key,status,60*1000*60*60);
+    }
+    public static  int getStopFlag() {
+        Object value =  MemCachedUtil.getValue(GlobalInfoParams.PROCESS_IS_STOP_FLAG);
+        if (null==value) {
+            return 0;
+        }
+        return (Integer)value;
+    }
+
 //    public static
 }

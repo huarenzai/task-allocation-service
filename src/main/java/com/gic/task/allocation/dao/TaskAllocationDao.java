@@ -44,7 +44,21 @@ public interface TaskAllocationDao extends BaseDao<TaskAllocationEntity> {
      */
     public List<TaskAllocationEntity> queryListByPage(ApiQueryListQo apiQueryListQo);
 
+    /**
+     * 查询
+     * @param taskAllocationId
+     * @return
+     */
     public TaskAllocationEntity findSingleByTaskAllocationId(String taskAllocationId);
+
+    /**
+     * 获取总数
+     * @param apiQueryListQo
+     * @return
+     */
+    public int count(ApiQueryListQo apiQueryListQo);
+
+//    public int
 
 //    public void create()
 }

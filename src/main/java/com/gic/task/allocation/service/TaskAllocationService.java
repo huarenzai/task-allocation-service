@@ -56,4 +56,9 @@ public interface TaskAllocationService extends BaseService<TaskAllocationEntity>
      * @return
      */
     public TaskAllocationEntity findSingleByTaskAllocationId(String taskAllocationId);
+
+    /**
+     * 开始线程
+     */
+    public void startThreads();
 }

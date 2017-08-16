@@ -19,4 +19,9 @@ public class GlobalInfoParams {
 
     public static int CALLNACK_TYPE_INIT=0;//等待分配处理
     public static int CALLBACK_TYPE_DEAL=1;//处理回调中
+
+    public static String PROCESS_IS_STOP_FLAG="task_allocation_is_stop";
+
+    public static int IS_START=0;
+    public static int IS_STOP=1;
 }

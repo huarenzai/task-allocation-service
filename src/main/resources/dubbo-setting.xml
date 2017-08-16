@@ -9,7 +9,7 @@
        http://code.alibabatech.com/schema/dubbo
        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 
-    <context:component-scan base-package="com.*"/>
+    <context:component-scan base-package="com.gic.task"/>
     <dubbo:annotation package="com"/>
     <dubbo:application name="task-allocation" />
     <dubbo:protocol  name="dubbo" port="21902"></dubbo:protocol>

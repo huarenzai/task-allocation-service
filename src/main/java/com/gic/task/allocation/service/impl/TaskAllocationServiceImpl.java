@@ -4,6 +4,7 @@ import com.dexcoder.commons.bean.BeanConverter;
 import com.dexcoder.dal.spring.page.PageControl;
 import com.gic.task.allocation.common.GlobalInfoParams;
 import com.gic.task.allocation.common.TaskAllocationMemcache;
+import com.gic.task.allocation.common.pool.TaskAllocationThread;
 import com.gic.task.allocation.dao.TaskAllocationDao;
 import com.gic.task.allocation.entity.TaskAllocationEntity;
 import com.gic.task.allocation.qo.ApiQueryListQo;
@@ -23,8 +24,8 @@ import java.util.List;
 @Service
 public class TaskAllocationServiceImpl extends BaseServiceImpl<TaskAllocationEntity> implements TaskAllocationService {
     private Logger logger=Logger.getLogger(this.getClass());
-//    @Autowired
-//    private ThreadPoolTaskExecutor poolTaskExecutor;//线程池
+    @Autowired
+    private ThreadPoolTaskExecutor poolTaskExecutor;//线程池
 
     @Autowired
     private TaskAllocationDao taskAllocationDao;
@@ -99,5 +100,17 @@ public class TaskAllocationServiceImpl extends BaseServiceImpl<TaskAllocationEnt
 
     public TaskAllocationEntity findSingleByTaskAllocationId(String taskAllocationId){
         return taskAllocationDao.findSingleByTaskAllocationId(taskAllocationId);
+    }
+
+    public void startThreads() {
+        ApiQueryListQo apiQueryListQo=new ApiQueryListQo();
+        apiQueryListQo.setTaskStatus(GlobalInfoParams.TASK_STATUS_INIT);
+        int count = taskAllocationDao.count(apiQueryListQo);
+        TaskAllocationMemcache.setStopFlag(GlobalInfoParams.IS_START);//设置启动
+        while (count-->0) {
+            TaskAllocationThread taskAllocationThread = new TaskAllocationThread();
+            taskAllocationThread.setTaskAllocationService(this);
+            poolTaskExecutor.execute(taskAllocationThread);
+        }
     }
 }

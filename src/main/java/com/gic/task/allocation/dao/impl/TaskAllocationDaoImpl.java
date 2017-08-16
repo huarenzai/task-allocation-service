@@ -62,14 +62,18 @@ public class TaskAllocationDaoImpl extends BaseDaoImpl<TaskAllocationEntity> imp
     public List<TaskAllocationEntity> queryListByPage(ApiQueryListQo apiQueryListQo) {
         PageControl.performPage(apiQueryListQo);
         Criteria criteria = Criteria.select(TaskAllocationEntity.class);
-        if (!StringUtils.isBlank(apiQueryListQo.getTaskAllocationId())){
-            criteria.where("taskAllocationId",new Object[]{apiQueryListQo.getTaskAllocationId()});
+        criteria.where("1","=",new Object[]{"1"});
+        if (StringUtils.isNotBlank(apiQueryListQo.getTaskAllocationId())){
+            criteria.and("taskAllocationId",new Object[]{apiQueryListQo.getTaskAllocationId()});
         }
         if (apiQueryListQo.getTaskType()!=-1){//类型
-            criteria.where("taskType",new Object[]{apiQueryListQo.getTaskType()});
+            criteria.and("taskType",new Object[]{apiQueryListQo.getTaskType()});
         }
         if (apiQueryListQo.getTaskStatus()!=-1){//类型
-            criteria.where("taskStatus",new Object[]{apiQueryListQo.getTaskStatus()});
+            criteria.and("taskStatus",new Object[]{apiQueryListQo.getTaskStatus()});
+        }
+        if (StringUtils.isNotBlank(apiQueryListQo.getEnterpriseId())){
+            criteria.and("enterpriseId",new Object[]{apiQueryListQo.getEnterpriseId()});
         }
         criteria.desc("dealTime");
         jdbcDao.queryList(criteria);
@@ -80,5 +84,25 @@ public class TaskAllocationDaoImpl extends BaseDaoImpl<TaskAllocationEntity> imp
     public TaskAllocationEntity findSingleByTaskAllocationId(String taskAllocationId) {
         Criteria criteria = Criteria.select(TaskAllocationEntity.class).where("taskAllocationId", new Object[]{taskAllocationId});
         return jdbcDao.querySingleResult(criteria);
+    }
+
+    public int count(ApiQueryListQo apiQueryListQo) {
+        Criteria criteria = Criteria.select(TaskAllocationEntity.class);
+        criteria.where("1",new Object[]{"1"});
+        if (StringUtils.isNotBlank(apiQueryListQo.getTaskAllocationId())){
+            criteria.and("taskAllocationId",new Object[]{apiQueryListQo.getTaskAllocationId()});
+        }
+        if (apiQueryListQo.getTaskType()!=-1){//类型
+            criteria.and("taskType",new Object[]{apiQueryListQo.getTaskType()});
+        }
+        if (apiQueryListQo.getTaskStatus()!=-1){//类型
+            criteria.and("taskStatus",new Object[]{apiQueryListQo.getTaskStatus()});
+        }
+        if (StringUtils.isNotBlank(apiQueryListQo.getEnterpriseId())){
+            criteria.and("enterpriseId",new Object[]{apiQueryListQo.getEnterpriseId()});
+        }
+
+        int i = jdbcDao.queryCount(criteria);
+        return i;
     }
 }

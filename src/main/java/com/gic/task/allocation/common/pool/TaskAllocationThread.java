@@ -32,6 +32,11 @@ public class TaskAllocationThread implements Runnable {
     }
 
     public void run() {
+        int stopFlag = TaskAllocationMemcache.getStopFlag();
+        if (stopFlag==GlobalInfoParams.IS_STOP) {
+            logger.info("已经停止运行");
+            return;
+        }
         TaskAllocationEntity single = taskAllocationService.findSingle();
         if (null!=single&&single.getTaskMqKey()!=null) {
             String params = TaskAllocationMemcache.getParams(single.getTaskAllocationId());
